@@ -13,8 +13,23 @@ interface RecordDao {
     @Insert
     suspend fun insert(record: RecordEntity)
 
-    @Query("UPDATE record SET title = :title, content = :content WHERE id = :id")
-    suspend fun update(id: Int, title: String, content: String)
+    @Query(
+        """
+    UPDATE record 
+    SET title = :title,
+        content = :content,
+        category = :category,
+        rating = :rating
+    WHERE id = :id
+"""
+    )
+    suspend fun update(
+        id: Int,
+        title: String,
+        content: String,
+        category: String,
+        rating: String
+    )
 
     @Query("DELETE FROM record WHERE id = :id")
     suspend fun deleteById(id: Int)

@@ -12,11 +12,12 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.my_record"
+//        applicationId = "com.example.my_record"
+        applicationId = "com.saga.my_record"
         minSdk = 24
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 6
+        versionName = "1.0.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

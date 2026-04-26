@@ -26,6 +26,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.my_record.RecordEntity
 import com.example.my_record.RecordViewModel
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,12 +52,14 @@ fun CreateScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize(),              // 画面全体を使う
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally // 中央揃え
+            .fillMaxSize()              // 画面全体を使う
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()) // ← 横向き対策
+//        verticalArrangement = Arrangement.Center,
+//        horizontalAlignment = Alignment.CenterHorizontally // 中央揃え
 
     ) {
-        Text("ここはRecorf画面です。")
+        Text("ここはCreate画面です。")
 //        Text(sample.title)
 //        Text(sample.date)
 
@@ -135,6 +140,9 @@ fun CreateScreen(
                 }
             }
         }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
         Button(
             onClick = {
                 val record = RecordEntity(
@@ -147,22 +155,31 @@ fun CreateScreen(
                 )
 
                 viewModel.insert(record)
-
                 navController.navigate("list")
             }
         ) {
             Text("保存する")
         }
-    }
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),              // 画面全体を使う
-        verticalArrangement = Arrangement.Bottom, // 下に寄せる
-        horizontalAlignment = Alignment.CenterHorizontally // 中央揃え
 
-    ) {
-        Row {
+        // 画面下に押し下げる
+        Spacer(modifier = Modifier.weight(1f))
+
+//    Column(
+//        modifier = Modifier
+//            .fillMaxSize(),              // 画面全体を使う
+//        verticalArrangement = Arrangement.Bottom, // 下に寄せる
+//        horizontalAlignment = Alignment.CenterHorizontally // 中央揃え
+//
+//    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .navigationBarsPadding(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
             Button(
+                modifier = Modifier
+                    .navigationBarsPadding(),
                 onClick = {
                     navController.navigate("home")
                 }
@@ -170,6 +187,8 @@ fun CreateScreen(
                 Text("ホーム画面へ")
             }
             Button(
+                modifier = Modifier
+                    .navigationBarsPadding(),
                 onClick = {
                     navController.navigate("list")
                 }
@@ -177,5 +196,6 @@ fun CreateScreen(
                 Text("一覧へ")
             }
         }
+//    }
     }
 }

@@ -3,6 +3,8 @@ package com.example.my_record
 import com.example.my_record.ui.screen.CreateScreen
 import com.example.my_record.ui.screen.HomeScreen
 import com.example.my_record.ui.screen.ListScreen
+import com.example.my_record.ui.screen.DetailScreen
+import com.example.my_record.ui.screen.EditScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,6 +17,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
 import androidx.navigation.NavHostController
+
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,5 +71,13 @@ fun AppNavHost(
         composable("home") { HomeScreen(navController, viewModel) }
         composable("create") { CreateScreen(navController, viewModel) }
         composable("list") { ListScreen(navController, viewModel) }
+        composable("detail/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")?.toInt() ?: 0
+            DetailScreen(navController, viewModel, id)
+        }
+        composable("edit/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")?.toInt() ?: 0
+            EditScreen(navController, viewModel, id)
+        }
     }
 }
