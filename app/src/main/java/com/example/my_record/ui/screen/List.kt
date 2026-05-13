@@ -65,9 +65,10 @@ fun ListScreen(
         ) {
             items(records) { record ->
                 val bgColor = when (record.rating) {
-                    "◎" -> Color(0xFFCCFFCC) // 黄緑（やや薄め）
+                    "◎" -> Color.White//(0xFFCCFFCC) // 黄緑（やや薄め）
                     "〇" -> Color.White
-                    "△" -> Color(0xFFFFFFCC) // 薄黄色
+                    "△" -> Color.White//(0xFFFFFFCC) // 薄黄色
+                    "評価待ち" -> Color(0xFFFFFFCC)
                     else -> Color.White
                 }
                 Card(
@@ -90,29 +91,34 @@ fun ListScreen(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
-                                    Text(
-                                        "カテゴリ：${record.category}",
-                                        fontSize = 18.sp,
-//                                        modifier = Modifier.weight(1f)
-                                    )
-                                    Text(
-                                        "評価：${record.rating}",
-                                        fontSize = 18.sp,
-//                                        modifier = Modifier.weight(1f)
-                                    )
+                                    Text("カテゴリ：${record.category}", fontSize = 16.sp)
+                                    Text("成功確率：${record.successRate}%", fontSize = 16.sp)
+//                                    Text("評価：${record.rating}", fontSize = 18.sp)
 //                                Text("日付：${formatDate(record.date)}")
                                 }
                             }
                         },
                         trailingContent = {
-                            Button(
-                                onClick = {
-//                                        viewModel.deleteRecord(record.id)
-                                    deleteTargetId = record.id
-                                    showDialog = true
-                                }
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(8.dp) // ボタン間の余白
                             ) {
-                                Text("削除")
+                                Button(
+                                    onClick = {
+                                        navController.navigate("assessment/${record.id}")
+                                    }
+                                ) {
+                                    Text("評価")
+                                }
+                                Button(
+                                    onClick = {
+//                                        viewModel.deleteRecord(record.id)
+                                        deleteTargetId = record.id
+                                        showDialog = true
+                                    }
+                                ) {
+                                    Text("削除")
+                                }
                             }
                         },
                         colors = ListItemDefaults.colors( // ← これが重要

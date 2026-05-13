@@ -27,8 +27,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.my_record.RecordEntity
 import com.example.my_record.RecordViewModel
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Slider
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,7 +48,7 @@ fun CreateScreen(
     var selectedCategory by remember { mutableStateOf(categories[0]) }
 
     // ★ プルダウン②：種類（例）
-    val types = listOf("◎", "〇", "△")
+    val types = listOf("評価待ち","◎", "〇", "△")
     var expandedType by remember { mutableStateOf(false) }
     var selectedType by remember { mutableStateOf(types[0]) }
 
@@ -54,6 +56,7 @@ fun CreateScreen(
         modifier = Modifier
             .fillMaxSize()              // 画面全体を使う
             .padding(16.dp)
+            .systemBarsPadding()
             .verticalScroll(rememberScrollState()) // ← 横向き対策
 //        verticalArrangement = Arrangement.Center,
 //        horizontalAlignment = Alignment.CenterHorizontally // 中央揃え
@@ -110,36 +113,49 @@ fun CreateScreen(
         }
         Spacer(modifier = Modifier.height(16.dp))
 
-        // ▼ プルダウン②：種類
-        ExposedDropdownMenuBox(
-            expanded = expandedType,
-            onExpandedChange = { expandedType = !expandedType }
-        ) {
-            TextField(
-                value = selectedType,
-                onValueChange = {},
-                readOnly = true,
-                label = { Text("評価") },
-                modifier = Modifier
-                    .menuAnchor()
-                    .fillMaxWidth()
-            )
+        //スライダー
+        var successRate by remember { mutableStateOf(50f) }
 
-            ExposedDropdownMenu(
-                expanded = expandedType,
-                onDismissRequest = { expandedType = false }
-            ) {
-                types.forEach { type ->
-                    DropdownMenuItem(
-                        text = { Text(type) },
-                        onClick = {
-                            selectedType = type
-                            expandedType = false
-                        }
-                    )
-                }
-            }
-        }
+        Text(text = "成功確率: ${successRate.toInt()}%")
+//        Spacer(modifier = Modifier.height(1.dp))
+        Slider(
+            value = successRate,
+            onValueChange = { successRate = it },
+            valueRange = 0f..100f,
+            steps = 9,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        // ▼ プルダウン②：種類
+//        ExposedDropdownMenuBox(
+//            expanded = expandedType,
+//            onExpandedChange = { expandedType = !expandedType }
+//        ) {
+////            TextField(
+////                value = selectedType,
+////                onValueChange = {},
+////                readOnly = true,
+////                label = { Text("評価") },
+////                modifier = Modifier
+////                    .menuAnchor()
+////                    .fillMaxWidth()
+////            )
+//
+//            ExposedDropdownMenu(
+//                expanded = expandedType,
+//                onDismissRequest = { expandedType = false }
+//            ) {
+//                types.forEach { type ->
+//                    DropdownMenuItem(
+//                        text = { Text(type) },
+//                        onClick = {
+//                            selectedType = type
+//                            expandedType = false
+//                        }
+//                    )
+//                }
+//            }
+//        }
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -151,7 +167,8 @@ fun CreateScreen(
                     content = contentState.value,
                     category = selectedCategory,
                     rating = selectedType, // 必要なら数値に変換してもOK
-                    date = System.currentTimeMillis()
+                    date = System.currentTimeMillis(),
+                    successRate = successRate.toInt()
                 )
 
                 viewModel.insert(record)

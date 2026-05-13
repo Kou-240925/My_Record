@@ -11,5 +11,7 @@ data class RecordEntity(
     val content: String,
     val category: String,
     val rating: String,
-    val date: Long
+    val date: Long,
+    val successRate: Int,
+    val assessmentMemo: String = ""
 )

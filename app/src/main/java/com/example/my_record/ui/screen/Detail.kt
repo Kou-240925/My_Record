@@ -1,10 +1,15 @@
 package com.example.my_record.ui.screen
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
@@ -37,6 +42,7 @@ fun DetailScreen(
         modifier = Modifier
             .padding(16.dp)
             .statusBarsPadding()
+            .verticalScroll(rememberScrollState()) // ← 横向き対策
     ) {
 
         LaunchedEffect(id) {
@@ -53,8 +59,8 @@ fun DetailScreen(
 
         Row(modifier = Modifier.fillMaxWidth()) {
             Text("カテゴリ：${record.category}", fontSize = 20.sp,modifier = Modifier.weight(1f))//カテゴリ
-            Text("評価：${record.rating}", fontSize = 20.sp,modifier = Modifier.weight(1f))//評価
-
+//            Text("評価：${record.rating}", fontSize = 20.sp,modifier = Modifier.weight(1f))//評価
+            Text("成功確率：${record.successRate}%", fontSize = 20.sp)
         }
         Text("最終保存日：${formatDate(record.date)}")//日付
         Divider(
@@ -63,8 +69,26 @@ fun DetailScreen(
                 .fillMaxWidth(),
             thickness = 1.dp
         )
-        Text("内容：${record.content}", fontSize = 20.sp)//内容
 
+        Box(
+            modifier = Modifier
+                .height(200.dp) // 必要に応じて調整
+                .verticalScroll(rememberScrollState())
+        ){
+            Column {
+                Text("内容：${record.content}", fontSize = 18.sp)//内容
+            }
+        }
+        Text("評価：${record.rating}", fontSize = 18.sp)
+        Box(
+            modifier = Modifier
+                .height(200.dp) // 必要に応じて調整
+                .verticalScroll(rememberScrollState())
+        ){
+            Text("評価メモ：${record.assessmentMemo}", fontSize = 18.sp)
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         Row {
             Button(

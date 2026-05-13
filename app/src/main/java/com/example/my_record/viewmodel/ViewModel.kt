@@ -40,11 +40,12 @@ class RecordViewModel(private val dao: RecordDao) : ViewModel() {
     fun updateRecord(record: RecordEntity) {
         viewModelScope.launch {
             dao.update(
-                record.id,
-                record.title,
-                record.content,
-                record.category,
-                record.rating
+                record
+//                record.id,
+//                record.title,
+//                record.content,
+//                record.category,
+//                record.rating
             )
             loadRecords()
         }
@@ -59,5 +60,9 @@ class RecordViewModel(private val dao: RecordDao) : ViewModel() {
 
     fun getRecordById(id: Int): RecordEntity? {
         return recordList.find { it.id == id }
+    }
+
+    fun getPendingCount(): Int {
+        return recordList.count { it.rating == "評価待ち" }
     }
 }

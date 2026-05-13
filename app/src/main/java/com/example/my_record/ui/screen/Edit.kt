@@ -6,11 +6,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -22,6 +25,7 @@ import androidx.navigation.NavController
 import com.example.my_record.RecordViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditScreen(
@@ -50,7 +54,12 @@ fun EditScreen(
     var expandedType by remember { mutableStateOf(false) }
     var selectedType by remember { mutableStateOf(record.rating) }
 
-    Column(modifier = Modifier.padding(16.dp).statusBarsPadding()) {
+    Column(
+        modifier = Modifier
+            .padding(16.dp)
+            .statusBarsPadding()
+            .verticalScroll(rememberScrollState()) // ← 横向き対策
+    ) {
 
         Text("編集画面")
 
@@ -107,36 +116,48 @@ fun EditScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // ▼ プルダウン②：評価
-        ExposedDropdownMenuBox(
-            expanded = expandedType,
-            onExpandedChange = { expandedType = !expandedType }
-        ) {
-            TextField(
-                value = selectedType,
-                onValueChange = {},
-                readOnly = true,
-                label = { Text("評価") },
-                modifier = Modifier
-                    .menuAnchor()
-                    .fillMaxWidth()
-            )
+        var successRate by remember { mutableStateOf(50f) }
 
-            ExposedDropdownMenu(
-                expanded = expandedType,
-                onDismissRequest = { expandedType = false }
-            ) {
-                types.forEach { type ->
-                    DropdownMenuItem(
-                        text = { Text(type) },
-                        onClick = {
-                            selectedType = type
-                            expandedType = false
-                        }
-                    )
-                }
-            }
-        }
+        Text(text = "成功確率: ${successRate.toInt()}%")
+//        Spacer(modifier = Modifier.height(1.dp))
+        Slider(
+            value = successRate,
+            onValueChange = { successRate = it },
+            valueRange = 0f..100f,
+            steps = 9,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+//        // ▼ プルダウン②：評価
+//        ExposedDropdownMenuBox(
+//            expanded = expandedType,
+//            onExpandedChange = { expandedType = !expandedType }
+//        ) {
+//            TextField(
+//                value = selectedType,
+//                onValueChange = {},
+//                readOnly = true,
+//                label = { Text("評価") },
+//                modifier = Modifier
+//                    .menuAnchor()
+//                    .fillMaxWidth()
+//            )
+//
+//            ExposedDropdownMenu(
+//                expanded = expandedType,
+//                onDismissRequest = { expandedType = false }
+//            ) {
+//                types.forEach { type ->
+//                    DropdownMenuItem(
+//                        text = { Text(type) },
+//                        onClick = {
+//                            selectedType = type
+//                            expandedType = false
+//                        }
+//                    )
+//                }
+//            }
+//        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
