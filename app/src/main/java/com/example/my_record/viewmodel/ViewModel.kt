@@ -7,6 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 
 class RecordViewModel(private val dao: RecordDao) : ViewModel() {
@@ -65,4 +67,47 @@ class RecordViewModel(private val dao: RecordDao) : ViewModel() {
     fun getPendingCount(): Int {
         return recordList.count { it.rating == "評価待ち" }
     }
+
+    suspend fun exportJson(): String {
+        val records = dao.getAll()
+        val backupData = BackupData(records = records)
+        val json = Json {
+            prettyPrint = true
+            encodeDefaults = true
+        }
+        return json.encodeToString(backupData)
+    }
+
+//    fun importBackup(backupData: BackupData) {
+//        viewModelScope.launch {
+//
+//            dao.deleteAll()
+//
+//            dao.insertAll(backupData.records)
+//
+//            loadRecords()
+//        }
+//    }
+
+    suspend fun importJson(json: String) {
+        val backupData = Json.decodeFromString<BackupData>(json)
+        importBackup(backupData)
+
+        if (backupData.version != 1) {
+            throw Exception(
+                "未対応のバックアップ形式です"
+            )
+        }
+
+        importBackup(backupData)
+    }
+
+    private suspend fun importBackup(backupData: BackupData) {
+        dao.deleteAll()
+        dao.insertAll(
+            backupData.records.map { it.copy(id = 0) }
+        )
+        loadRecords()
+    }
+
 }

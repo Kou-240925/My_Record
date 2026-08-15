@@ -31,6 +31,9 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
+import androidx.compose.ui.graphics.Color
+import com.example.my_record.ui.components.AppButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +48,8 @@ fun CreateScreen(
     // ★ プルダウン①：カテゴリ
     val categories = listOf("投資", "学習", "生活")
     var expandedCategory by remember { mutableStateOf(false) }
-    var selectedCategory by remember { mutableStateOf(categories[0]) }
+//    var selectedCategory by remember { mutableStateOf(categories[0]) }
+    var selectedCategory by remember { mutableStateOf("") }
 
     // ★ プルダウン②：種類（例）
     val types = listOf("評価待ち","◎", "〇", "△")
@@ -58,13 +62,8 @@ fun CreateScreen(
             .padding(16.dp)
             .systemBarsPadding()
             .verticalScroll(rememberScrollState()) // ← 横向き対策
-//        verticalArrangement = Arrangement.Center,
-//        horizontalAlignment = Alignment.CenterHorizontally // 中央揃え
-
     ) {
-        Text("ここはCreate画面です。")
-//        Text(sample.title)
-//        Text(sample.date)
+//        Text("ここはCreate画面です。")
 
         TextField(
             value = titleState.value,
@@ -87,7 +86,7 @@ fun CreateScreen(
             onExpandedChange = { expandedCategory = !expandedCategory }
         ) {
             TextField(
-                value = selectedCategory,
+                value = if (selectedCategory.isEmpty()) "選択してください" else selectedCategory,//selectedCategory,
                 onValueChange = {},
                 readOnly = true,
                 label = { Text("カテゴリ") },
@@ -123,43 +122,18 @@ fun CreateScreen(
             onValueChange = { successRate = it },
             valueRange = 0f..100f,
             steps = 9,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = SliderDefaults.colors(
+                thumbColor = Color(0xFF1E3A5F),
+                activeTrackColor = Color(0xFF1E3A5F),
+                inactiveTrackColor = Color(0xFFD8D8D8)
+            )
         )
-
-        // ▼ プルダウン②：種類
-//        ExposedDropdownMenuBox(
-//            expanded = expandedType,
-//            onExpandedChange = { expandedType = !expandedType }
-//        ) {
-////            TextField(
-////                value = selectedType,
-////                onValueChange = {},
-////                readOnly = true,
-////                label = { Text("評価") },
-////                modifier = Modifier
-////                    .menuAnchor()
-////                    .fillMaxWidth()
-////            )
-//
-//            ExposedDropdownMenu(
-//                expanded = expandedType,
-//                onDismissRequest = { expandedType = false }
-//            ) {
-//                types.forEach { type ->
-//                    DropdownMenuItem(
-//                        text = { Text(type) },
-//                        onClick = {
-//                            selectedType = type
-//                            expandedType = false
-//                        }
-//                    )
-//                }
-//            }
-//        }
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Button(
+        AppButton(
+            text = "保存する",
             onClick = {
                 val record = RecordEntity(
                     id = 0, // 自動採番
@@ -170,49 +144,34 @@ fun CreateScreen(
                     date = System.currentTimeMillis(),
                     successRate = successRate.toInt()
                 )
-
                 viewModel.insert(record)
                 navController.navigate("list")
             }
-        ) {
-            Text("保存する")
-        }
+        )
 
         // 画面下に押し下げる
         Spacer(modifier = Modifier.weight(1f))
 
-//    Column(
-//        modifier = Modifier
-//            .fillMaxSize(),              // 画面全体を使う
-//        verticalArrangement = Arrangement.Bottom, // 下に寄せる
-//        horizontalAlignment = Alignment.CenterHorizontally // 中央揃え
-//
-//    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .navigationBarsPadding(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Button(
-                modifier = Modifier
-                    .navigationBarsPadding(),
+            AppButton(
+                text = "ホーム画面へ",
                 onClick = {
                     navController.navigate("home")
-                }
-            ) {
-                Text("ホーム画面へ")
-            }
-            Button(
-                modifier = Modifier
-                    .navigationBarsPadding(),
+                },
+                modifier = Modifier.navigationBarsPadding()
+            )
+            AppButton(
+                text = "一覧へ",
                 onClick = {
                     navController.navigate("list")
-                }
-            ) {
-                Text("一覧へ")
-            }
+                },
+                modifier = Modifier.navigationBarsPadding()
+            )
         }
-//    }
     }
 }

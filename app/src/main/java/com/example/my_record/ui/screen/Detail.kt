@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.my_record.RecordViewModel
+import com.example.my_record.ui.components.AppButton
 
 
 @Composable
@@ -62,7 +64,7 @@ fun DetailScreen(
 //            Text("評価：${record.rating}", fontSize = 20.sp,modifier = Modifier.weight(1f))//評価
             Text("成功確率：${record.successRate}%", fontSize = 20.sp)
         }
-        Text("最終保存日：${formatDate(record.date)}")//日付
+        Text("最終保存日：${formatDate(record.updatedAt)}")//日付
         Divider(
             modifier = Modifier
                 .padding(vertical = 12.dp)
@@ -91,16 +93,18 @@ fun DetailScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Row {
-            Button(
+            AppButton(
+                text = "編集",
                 onClick = {
                     navController.navigate("edit/${record.id}")
-                }
-            ) {
-                Text("編集")
-            }
-            Button(onClick = { navController.popBackStack() }) {
-                Text("戻る")
-            }
+                },
+                modifier = Modifier.navigationBarsPadding()
+            )
+            AppButton(
+                text = "戻る",
+                onClick = { navController.popBackStack() },
+                modifier = Modifier.navigationBarsPadding()
+            )
 
         }
 

@@ -2,6 +2,7 @@ package com.example.my_record
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 
@@ -35,4 +36,11 @@ interface RecordDao {
     suspend fun update(record: RecordEntity)   // ← これだけで全フィールド更新される
     @Query("DELETE FROM record WHERE id = :id")
     suspend fun deleteById(id: Int)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(records: List<RecordEntity>)
+
+    @Query("DELETE FROM record")
+    suspend fun deleteAll()
+
 }

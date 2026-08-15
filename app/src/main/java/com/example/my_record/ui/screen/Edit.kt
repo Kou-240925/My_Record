@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
@@ -14,6 +15,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -25,6 +27,8 @@ import androidx.navigation.NavController
 import com.example.my_record.RecordViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+import com.example.my_record.ui.components.AppButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,7 +65,7 @@ fun EditScreen(
             .verticalScroll(rememberScrollState()) // ← 横向き対策
     ) {
 
-        Text("編集画面")
+//        Text("編集画面")
 
         // ▼ タイトル
         TextField(
@@ -116,7 +120,7 @@ fun EditScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        var successRate by remember { mutableStateOf(50f) }
+        var successRate by remember { mutableStateOf(record.successRate.toFloat()) }
 
         Text(text = "成功確率: ${successRate.toInt()}%")
 //        Spacer(modifier = Modifier.height(1.dp))
@@ -125,57 +129,33 @@ fun EditScreen(
             onValueChange = { successRate = it },
             valueRange = 0f..100f,
             steps = 9,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = SliderDefaults.colors(
+                thumbColor = Color(0xFF1E3A5F),
+                activeTrackColor = Color(0xFF1E3A5F),
+                inactiveTrackColor = Color(0xFFD8D8D8)
+            )
         )
-
-//        // ▼ プルダウン②：評価
-//        ExposedDropdownMenuBox(
-//            expanded = expandedType,
-//            onExpandedChange = { expandedType = !expandedType }
-//        ) {
-//            TextField(
-//                value = selectedType,
-//                onValueChange = {},
-//                readOnly = true,
-//                label = { Text("評価") },
-//                modifier = Modifier
-//                    .menuAnchor()
-//                    .fillMaxWidth()
-//            )
-//
-//            ExposedDropdownMenu(
-//                expanded = expandedType,
-//                onDismissRequest = { expandedType = false }
-//            ) {
-//                types.forEach { type ->
-//                    DropdownMenuItem(
-//                        text = { Text(type) },
-//                        onClick = {
-//                            selectedType = type
-//                            expandedType = false
-//                        }
-//                    )
-//                }
-//            }
-//        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         // ▼ 更新ボタン
-        Button(
+        AppButton(
+            text = "更新",
             onClick = {
                 viewModel.updateRecord(
                     record.copy(
                         title = titleState,
                         content = contentState,
                         category = selectedCategory,
-                        rating = selectedType
+                        rating = selectedType,
+                        successRate = successRate.toInt(),
+                        updatedAt = System.currentTimeMillis()
                     )
                 )
                 navController.popBackStack()
-            }
-        ) {
-            Text("更新")
-        }
+            },
+            modifier = Modifier.navigationBarsPadding()
+        )
     }
 }
