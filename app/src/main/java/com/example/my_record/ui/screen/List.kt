@@ -95,8 +95,8 @@ fun ListScreen(
                             shape = RoundedCornerShape(12.dp)
                         )
                         .clickable {
-                                navController.navigate("detail/${record.id}")
-                            }
+                            navController.navigate("detail/${record.id}")
+                        }
                         .height(120.dp),   // ← 高さ固定
 
                     shape = RoundedCornerShape(10.dp),
@@ -111,7 +111,9 @@ fun ListScreen(
 
                         // 左側：タイトル + 情報
                         Column(
-                            modifier = Modifier.weight(1f).padding(end = 8.dp)
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = 8.dp)
                         ) {
                             Text(
                                 text = record.title,
@@ -138,14 +140,17 @@ fun ListScreen(
                                 onClick = {
                                     navController.navigate("assessment/${record.id}")
                                 },
+                                width = 120.dp,
                                 modifier = Modifier.height(36.dp)
                             )
+
                             AppButton(
                                 text = "削除",
                                 onClick = {
                                     deleteTargetId = record.id
                                     showDialog = true
                                 },
+                                width = 120.dp,
                                 modifier = Modifier.height(36.dp)
                             )
                         }

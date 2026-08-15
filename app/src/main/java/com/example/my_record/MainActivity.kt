@@ -6,6 +6,7 @@ import com.example.my_record.ui.screen.ListScreen
 import com.example.my_record.ui.screen.DetailScreen
 import com.example.my_record.ui.screen.EditScreen
 import com.example.my_record.ui.screen.AssessmentScreen
+import com.example.my_record.ui.screen.DataManagementScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -83,6 +84,12 @@ fun AppNavHost(
         composable("assessment/{id}") { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")?.toInt() ?: 0
             AssessmentScreen(navController, viewModel, id)
+        }
+        composable("data_management") {
+            DataManagementScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
         }
     }
 }

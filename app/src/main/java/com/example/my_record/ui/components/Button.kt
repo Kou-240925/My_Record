@@ -24,7 +24,7 @@ fun AppButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    width: Dp = 120.dp,
+    width: Dp? = null,//120.dp,
     height: Dp = 40.dp
 ) {
     Button(
@@ -35,7 +35,14 @@ fun AppButton(
         ),
         contentPadding = PaddingValues(0.dp),
         modifier = modifier
-            .width(width)
+            .then(
+                if (width != null) {
+                    Modifier.width(width)
+                } else {
+                    Modifier
+                }
+            )
+//            .width(width)
             .height(height)
             .shadow(
                 elevation = 8.dp,
